@@ -59,6 +59,7 @@ export const CommentSection = ({ postId }: Props) => {
   const [newCommentText, setNewCommentText] = useState<string>("");
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const [commentError, setCommentError] = useState<string>("");
 
   const {
     data: comments,
@@ -80,12 +81,17 @@ export const CommentSection = ({ postId }: Props) => {
       ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["comments", postId] });
+      setCommentError("");
     },
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newCommentText) return;
+    setCommentError("");
+    if (!newCommentText) {
+      setCommentError("Comment cannot be empty.");
+      return;
+    }
     mutate({ content: newCommentText, parent_comment_id: null });
     setNewCommentText("");
   };
@@ -138,6 +144,7 @@ export const CommentSection = ({ postId }: Props) => {
             placeholder="Write a comment..."
             rows={3}
           />
+          <p className="w-full text-red-500">{commentError}</p>
           <button
             type="submit"
             className="mt-2 bg-green-500 text-white px-4 py-2 rounded cursor-pointer"

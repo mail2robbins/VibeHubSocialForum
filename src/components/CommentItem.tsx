@@ -37,7 +37,7 @@ export const CommentItem = ({ comment, postId }: Props) => {
   const [showReply, setShowReply] = useState<boolean>(false);
   const [replyText, setReplyText] = useState<string>("");
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
-
+  const [replyCommentError, setReplyCommentError] = useState<string>("");
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
@@ -54,12 +54,17 @@ export const CommentItem = ({ comment, postId }: Props) => {
       queryClient.invalidateQueries({ queryKey: ["comments", postId] });
       setReplyText("");
       setShowReply(false);
+      setReplyCommentError("");
     },
   });
 
   const handleReplySubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!replyText) return;
+    setReplyCommentError("");
+    if (!replyText) {
+      setReplyCommentError("Reply cannot be empty.");
+      return;
+    }
     mutate(replyText);
   };
 
@@ -77,7 +82,10 @@ export const CommentItem = ({ comment, postId }: Props) => {
         </div>
         <p className="text-gray-300">{comment.content}</p>
         <button
-          onClick={() => setShowReply((prev) => !prev)}
+          onClick={() => {
+            setShowReply((prev) => !prev);
+            setReplyCommentError("");
+          }}
           className="text-blue-500 text-sm mt-1"
         >
           {showReply ? "Cancel" : user && "Reply"}
@@ -92,6 +100,7 @@ export const CommentItem = ({ comment, postId }: Props) => {
             placeholder="Write a reply..."
             rows={2}
           />
+          <p className="w-full text-red-500">{replyCommentError}</p>
           <button
             type="submit"
             className="mt-1 bg-blue-500 text-white px-3 py-1 rounded"
