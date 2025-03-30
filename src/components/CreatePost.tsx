@@ -152,11 +152,11 @@ export const CreatePost = () => {
           <select
             id="community"
             onChange={handleCommunityChange}
-            className="w-full glass-effect p-3 rounded-lg border border-white/10 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all duration-300"
+            className="w-full glass-effect p-3 rounded-lg border border-white/10 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all duration-300 text-gray-300 bg-transparent"
           >
-            <option value={""}>-- Choose a Community --</option>
+            <option value={""} className="bg-slate-900">-- Choose a Community --</option>
             {communities?.map((community, key) => (
-              <option key={key} value={community.id}>
+              <option key={key} value={community.id} className="bg-slate-900">
                 {community.name}
               </option>
             ))}
