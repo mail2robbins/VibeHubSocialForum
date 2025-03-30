@@ -9,18 +9,24 @@ import { CommunityPage } from "./pages/CommunityPage";
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 transition-opacity duration-700 pt-20">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-gray-100 transition-all duration-700">
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_50%)] pointer-events-none" />
       <Navbar />
-      <div className="container mx-auto px-4 py-6">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/create" element={<CreatePostPage />} />
-          <Route path="/post/:id" element={<PostPage />} />
-          <Route path="/community/create" element={<CreateCommunityPage />} />
-          <Route path="/communities" element={<CommunitiesPage />} />
-          <Route path="/community/:id" element={<CommunityPage />} />
-        </Routes>
-      </div>
+      <main className="container mx-auto px-4 py-8 max-w-7xl relative">
+        <div className="glass-effect glass-effect-hover rounded-2xl p-8 shadow-xl animate-glow">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-green-500/5 rounded-2xl" />
+          <div className="relative">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/create" element={<CreatePostPage />} />
+              <Route path="/post/:id" element={<PostPage />} />
+              <Route path="/community/create" element={<CreateCommunityPage />} />
+              <Route path="/communities" element={<CommunitiesPage />} />
+              <Route path="/community/:id" element={<CommunityPage />} />
+            </Routes>
+          </div>
+        </div>
+      </main>
     </div>
   );
 }

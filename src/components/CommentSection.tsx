@@ -122,47 +122,86 @@ export const CommentSection = ({ postId }: Props) => {
   };
 
   if (isLoading) {
-    return <div> Loading comments...</div>;
+    return (
+      <div className="flex items-center justify-center py-8">
+        <div className="animate-loading-bar w-32 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full" />
+      </div>
+    );
   }
 
   if (error) {
-    return <div> Error: {error.message}</div>;
+    return (
+      <div className="text-red-500 text-center p-4 rounded-lg bg-red-500/10">
+        Error: {error.message}
+      </div>
+    );
   }
 
   const commentTree = comments ? buildCommentTree(comments) : [];
 
   return (
-    <div className="mt-6">
-      <h3 className="text-2xl font-semibold mb-4">Comments</h3>
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <h3 className="text-2xl font-bold text-gradient">Comments</h3>
+        <span className="text-gray-400">
+          {commentTree.length} {commentTree.length === 1 ? 'comment' : 'comments'}
+        </span>
+      </div>
+
       {/* Create Comment Section */}
       {user ? (
-        <form onSubmit={handleSubmit} className="mb-4">
-          <textarea
-            value={newCommentText}
-            onChange={(e) => setNewCommentText(e.target.value)}
-            className="w-full border border-white/10 bg-transparent p-2 rounded"
-            placeholder="Write a comment..."
-            rows={3}
-          />
-          <p className="w-full text-red-500">{commentError}</p>
-          <button
-            type="submit"
-            className="mt-2 bg-green-500 text-white px-4 py-2 rounded cursor-pointer"
-          >
-            {isPending ? "Posting..." : "Post Comment"}
-          </button>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="relative group">
+            <textarea
+              value={newCommentText}
+              onChange={(e) => setNewCommentText(e.target.value)}
+              className="w-full glass-effect p-4 rounded-xl border border-white/10 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all duration-300 resize-none"
+              placeholder="Write a comment..."
+              rows={3}
+            />
+            <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 blur opacity-0 group-hover:opacity-100 transition duration-500 pointer-events-none"></div>
+          </div>
+          
+          {commentError && (
+            <p className="text-red-500 text-sm">{commentError}</p>
+          )}
+          
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              disabled={isPending}
+              className="px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg text-white font-medium hover:shadow-lg hover:shadow-blue-500/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isPending ? (
+                <span className="flex items-center space-x-2">
+                  <span className="animate-spin">⚡</span>
+                  <span>Posting...</span>
+                </span>
+              ) : (
+                "Post Comment"
+              )}
+            </button>
+          </div>
+          
           {isError && (
-            <p className="text-red-500 mt-2">Error posting comment.</p>
+            <p className="text-red-500 text-sm">Error posting comment.</p>
           )}
         </form>
       ) : (
-        <p className="mb-4 text-gray-600">
-          You must be logged in to post a comment.
-        </p>
+        <div className="glass-effect p-4 rounded-xl text-center">
+          <p className="text-gray-400">
+            You must be{" "}
+            <a href="/login" className="text-blue-400 hover:text-blue-300 transition-colors">
+              logged in
+            </a>{" "}
+            to post a comment.
+          </p>
+        </div>
       )}
 
       {/* Comments Display Section */}
-      <div className="space-y-4">
+      <div className="space-y-6">
         {commentTree.map((comment, key) => (
           <CommentItem key={key} comment={comment} postId={postId} />
         ))}
