@@ -16,7 +16,7 @@ export const Navbar = () => {
     return location.pathname.startsWith(path);
   };
 
-  const navLinkClasses = (path: string, color: string) => `
+  const navLinkClasses = (path: string) => `
     text-gray-300 hover:text-white transition-colors hover-lift relative group
     ${isActive(path) ? `text-white font-medium` : ''}
   `;
@@ -40,21 +40,21 @@ export const Navbar = () => {
               <>
                 <Link
                   to="/create"
-                  className={navLinkClasses("/create", "blue")}
+                  className={navLinkClasses("/create")}
                 >
                   Create Post
                   <span className={underlineClasses("/create", "blue")} />
                 </Link>
                 <Link
                   to="/communities"
-                  className={navLinkClasses("/communities", "green")}
+                  className={navLinkClasses("/communities")}
                 >
                   Communities
                   <span className={underlineClasses("/communities", "green")} />
                 </Link>
                 <Link
                   to="/community/create"
-                  className={navLinkClasses("/community/create", "purple")}
+                  className={navLinkClasses("/community/create")}
                 >
                   Create Community
                   <span className={underlineClasses("/community/create", "purple")} />
