@@ -1,12 +1,31 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import { useAuth } from "../context/AuthContext";
 
 export const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { signInWithGitHub, signOut, user } = useAuth();
+  const location = useLocation();
 
   const displayName = user?.user_metadata.user_name || user?.email;
+
+  const isActive = (path: string) => {
+    if (path === "/") {
+      return location.pathname === path;
+    }
+    return location.pathname.startsWith(path);
+  };
+
+  const navLinkClasses = (path: string, color: string) => `
+    text-gray-300 hover:text-white transition-colors hover-lift relative group
+    ${isActive(path) ? `text-white font-medium` : ''}
+  `;
+
+  const underlineClasses = (path: string, color: string) => `
+    absolute -bottom-1 left-0 h-0.5 transition-all duration-300
+    ${isActive(path) ? `w-full bg-${color}-500` : `w-0 bg-${color}-500 group-hover:w-full`}
+  `;
+
   return (
     <nav className="fixed top-0 w-full z-40 glass-effect border-b border-white/10">
       <div className="max-w-7xl mx-auto px-4">
@@ -21,24 +40,24 @@ export const Navbar = () => {
               <>
                 <Link
                   to="/create"
-                  className="text-gray-300 hover:text-white transition-colors hover-lift relative group"
+                  className={navLinkClasses("/create", "blue")}
                 >
                   Create Post
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-500 group-hover:w-full transition-all duration-300" />
+                  <span className={underlineClasses("/create", "blue")} />
                 </Link>
                 <Link
                   to="/communities"
-                  className="text-gray-300 hover:text-white transition-colors hover-lift relative group"
+                  className={navLinkClasses("/communities", "green")}
                 >
                   Communities
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-green-500 group-hover:w-full transition-all duration-300" />
+                  <span className={underlineClasses("/communities", "green")} />
                 </Link>
                 <Link
                   to="/community/create"
-                  className="text-gray-300 hover:text-white transition-colors hover-lift relative group"
+                  className={navLinkClasses("/community/create", "purple")}
                 >
                   Create Community
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-purple-500 group-hover:w-full transition-all duration-300" />
+                  <span className={underlineClasses("/community/create", "purple")} />
                 </Link>
               </>
             ) : null}
@@ -120,25 +139,41 @@ export const Navbar = () => {
           <div className="px-2 pt-2 pb-3 space-y-1">
             <Link
               to="/"
-              className="block px-3 py-2 rounded-lg text-base font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-all duration-300 hover-lift"
+              className={`block px-3 py-2 rounded-lg text-base font-medium transition-all duration-300 hover-lift ${
+                isActive("/")
+                  ? "text-white bg-white/10"
+                  : "text-gray-300 hover:text-white hover:bg-white/5"
+              }`}
             >
               Home
             </Link>
             <Link
               to="/create"
-              className="block px-3 py-2 rounded-lg text-base font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-all duration-300 hover-lift"
+              className={`block px-3 py-2 rounded-lg text-base font-medium transition-all duration-300 hover-lift ${
+                isActive("/create")
+                  ? "text-white bg-white/10"
+                  : "text-gray-300 hover:text-white hover:bg-white/5"
+              }`}
             >
               Create Post
             </Link>
             <Link
               to="/communities"
-              className="block px-3 py-2 rounded-lg text-base font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-all duration-300 hover-lift"
+              className={`block px-3 py-2 rounded-lg text-base font-medium transition-all duration-300 hover-lift ${
+                isActive("/communities")
+                  ? "text-white bg-white/10"
+                  : "text-gray-300 hover:text-white hover:bg-white/5"
+              }`}
             >
               Communities
             </Link>
             <Link
               to="/community/create"
-              className="block px-3 py-2 rounded-lg text-base font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-all duration-300 hover-lift"
+              className={`block px-3 py-2 rounded-lg text-base font-medium transition-all duration-300 hover-lift ${
+                isActive("/community/create")
+                  ? "text-white bg-white/10"
+                  : "text-gray-300 hover:text-white hover:bg-white/5"
+              }`}
             >
               Create Community
             </Link>
