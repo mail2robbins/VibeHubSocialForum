@@ -21,9 +21,22 @@ export const Navbar = () => {
     ${isActive(path) ? `text-white font-medium` : ''}
   `;
 
-  const underlineClasses = (path: string, color: string) => `
+  const getUnderlineColor = (path: string) => {
+    switch (path) {
+      case "/create":
+        return "bg-blue-500";
+      case "/communities":
+        return "bg-green-500";
+      case "/community/create":
+        return "bg-purple-500";
+      default:
+        return "bg-blue-500";
+    }
+  };
+
+  const underlineClasses = (path: string) => `
     absolute -bottom-1 left-0 h-0.5 transition-all duration-300
-    ${isActive(path) ? `w-full bg-${color}-500` : `w-0 bg-${color}-500 group-hover:w-full`}
+    ${isActive(path) ? `w-full ${getUnderlineColor(path)}` : `w-0 ${getUnderlineColor(path)} group-hover:w-full`}
   `;
 
   return (
@@ -43,21 +56,21 @@ export const Navbar = () => {
                   className={navLinkClasses("/create")}
                 >
                   Create Post
-                  <span className={underlineClasses("/create", "blue")} />
+                  <span className={underlineClasses("/create")} />
                 </Link>
                 <Link
                   to="/communities"
                   className={navLinkClasses("/communities")}
                 >
                   Communities
-                  <span className={underlineClasses("/communities", "green")} />
+                  <span className={underlineClasses("/communities")} />
                 </Link>
                 <Link
                   to="/community/create"
                   className={navLinkClasses("/community/create")}
                 >
                   Create Community
-                  <span className={underlineClasses("/community/create", "purple")} />
+                  <span className={underlineClasses("/community/create")} />
                 </Link>
               </>
             ) : null}
