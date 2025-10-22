@@ -135,10 +135,15 @@ async function verifySetup() {
     logError(`Storage check failed: ${err.message}`);
   }
 
+  // Test storage upload capability (requires authentication)
+  logInfo('\nNote: Storage upload permissions require authentication.');
+  logInfo('If image uploads fail, run the storage-policies.sql in Supabase SQL Editor.');
+
   // Check GitHub OAuth configuration
   logInfo('\nManual checks required:');
   logInfo('- [ ] GitHub OAuth is enabled in Supabase Authentication > Providers');
   logInfo('- [ ] Site URLs are configured: http://localhost:5173 and http://localhost:5173/**');
+  logInfo('- [ ] Storage policies applied (run storage-policies.sql if needed)');
 
   console.log('\n' + '='.repeat(50));
   if (hasErrors) {
