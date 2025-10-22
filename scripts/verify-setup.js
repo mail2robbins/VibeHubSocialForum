@@ -105,21 +105,30 @@ async function verifySetup() {
 
   // Check storage bucket
   try {
-    const { data: buckets, error } = await supabase.storage.listBuckets();
+    // Try to list files in the bucket (works even if empty)
+    const { data, error } = await supabase.storage.from('post-images').list();
+    
     if (error) {
-      logError(`Storage check failed: ${error.message}`);
-    } else {
-      const postImagesBucket = buckets.find(b => b.name === 'post-images');
-      if (postImagesBucket) {
-        logSuccess('post-images storage bucket exists');
-        if (postImagesBucket.public) {
-          logSuccess('post-images bucket is public');
-        } else {
-          logWarning('post-images bucket is not public - image uploads may not work');
-        }
-      } else {
+      // Check if it's a "not found" error vs other errors
+      if (error.message.includes('not found') || error.message.includes('does not exist')) {
         logError('post-images storage bucket not found');
         logInfo('Create a public bucket named "post-images" in Supabase Storage');
+      } else {
+        logWarning(`Storage bucket check: ${error.message}`);
+        logInfo('Bucket might exist but there may be a permissions issue');
+      }
+    } else {
+      logSuccess('post-images storage bucket exists and is accessible');
+      
+      // Try to verify it's public by checking bucket details
+      const { data: buckets } = await supabase.storage.listBuckets();
+      if (buckets) {
+        const bucket = buckets.find(b => b.name === 'post-images');
+        if (bucket?.public) {
+          logSuccess('post-images bucket is public');
+        } else if (bucket) {
+          logWarning('post-images bucket exists but may not be public');
+        }
       }
     }
   } catch (err) {
